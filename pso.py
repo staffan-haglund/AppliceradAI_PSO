@@ -52,6 +52,7 @@ class PSO:
         self._xmax = xmax
         self._func = func
         self._swarm = {}
+        self._convergence = []
         random.seed(rand_seed)
         for i in range(self._swarm_size):
             self._swarm[i] = {'Position': [round(random.uniform(self._xmin, self._xmax), 2) for x in range(self._dimensions)], \
@@ -60,6 +61,7 @@ class PSO:
         for i in range(self._swarm_size):
             self._swarm[i]['pbest'] = self._swarm[i]['Position']
             self._swarm[i]['best_value'] = self.rastrigin_fitness(self._swarm[i]['Position'])
+            
             # Om nytt personbästa (pbest) är bättre än temp_pbest, 
             # spara pbest som ny global bästa (gbest)
             # spara ny pbest som ny temp_pbest
@@ -72,6 +74,7 @@ class PSO:
         
         # Spara gbest_value från den med gbest position
         self._swarm['gbest_value'] = self.rastrigin_fitness(self._swarm['gbest'])
+        self._convergence.append(self._swarm['gbest_value'])
 
         for i in range(self._swarm_size):
             self._swarm[i]['Fitness'] = self.rastrigin_fitness(self._swarm[i]['Position'])
@@ -116,14 +119,16 @@ class PSO:
             for i in range(self._swarm_size):
                 # Utvärdera nuvarande position
                 current_value = self.rastrigin_fitness(self._swarm[i]['Position'])
+                
                 # Uppdatera personbästa
                 if current_value < self._swarm[i]['best_value']:
                     self._swarm[i]['pbest'] = self._swarm[i]['Position']
                     self._swarm[i]['best_value'] = current_value
-                #  Uppdatera globalt bästa
+                # Uppdatera globalt bästa
                 if current_value < self._swarm['gbest_value']:
                     self._swarm['gbest'] = self._swarm[i]['Position']
                     self._swarm['gbest_value'] = current_value
+            self._convergence.append(self._swarm['gbest_value'])
 
             for i in range(self._swarm_size):
                 r1 = round(random.random(), 3)
@@ -144,8 +149,12 @@ class PSO:
                 self._swarm[i]['Position'] = p_new
 
     def plot_convergence(self):
-        plt.figure(figsize=(8, 5))
-        plt.plot(self._max_iter, best_fitness_values, marker='o', linestyle='-', color='b', label="Best fitness")
+
+        # best_fitness_values = [100 / (i + 1) for i in range(self._max_iter)]
+        # fig = plt.figure(figsize=(8, 8))
+        print(self._convergence)
+        print(len(self._convergence))
+        plt.plot(range(len(self._convergence)), self._convergence, marker='o', linestyle='-', color='b', label="Best fitness")
 
         plt.xlabel("Iterationer")
         plt.ylabel("Best Fitness Value")
