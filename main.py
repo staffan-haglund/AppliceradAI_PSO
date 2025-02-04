@@ -16,6 +16,7 @@ if __name__ == "__main__":
     new_swarm.update_swarm()
     new_swarm.get_particle()
 
+    new_swarm.plot_convergence()
     # print(f'Particle #0: {new_swarm.get_particle(0)}')
     
     # new_swarm.update_particle()

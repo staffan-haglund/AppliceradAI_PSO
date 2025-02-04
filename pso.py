@@ -1,7 +1,7 @@
 import random
 import sys
 import numpy as np
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 from math import cos, pi
 
@@ -144,8 +144,6 @@ class PSO:
                 self._swarm[i]['Position'] = p_new
 
     def plot_convergence(self):
-
-
         plt.figure(figsize=(8, 5))
         plt.plot(self._max_iter, best_fitness_values, marker='o', linestyle='-', color='b', label="Best fitness")
 
