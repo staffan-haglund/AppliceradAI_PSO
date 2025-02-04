@@ -84,7 +84,7 @@ class PSO:
         return fitness
         
 
-    def update_particle(self, particle):
+    def update_particle(self):
         for i in range(self._swarm_size):
             # print(f'{self._swarm[i]['Position']}')  # = {'Velocity': round(random.uniform(self._xmin, self._xmax), 2)}
             self.rastrigin_fitness(self._swarm[i]['Position'])
@@ -92,6 +92,9 @@ class PSO:
         r2 = round(random.random(), 3)
         # # Update velocity
         # vi​=w⋅vi​+c1​⋅r1​⋅(pi​−xi​)+c2​⋅r2​⋅(g−xi​)
-        v = self._w * self._swarm[i]['Velocity'] + self._c1 * r1 * (self._swarm[i]['pbest'] - x) + self._c2 * r2 * (self._swarm[i]['gbest'] - x)
+        # v = self._w * self._swarm[i]['Velocity'] + self._c1 * r1 * (self._swarm[i]['pbest'] - x) + self._c2 * r2 * (self._swarm[i]['gbest'] - x)
 
+        v = self._w * self._swarm[i]['Velocity'] + \
+            self._c1 * r1 * (self._swarm[i]['pbest'] - self._swarm[i]['Position']) + \
+                self._c2 * r2 * (self._swarm[i]['gbest'] - self._swarm[i]['Position'])
     
