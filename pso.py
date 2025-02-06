@@ -53,6 +53,8 @@ class PSO:
         self._func = func
         self._swarm = {}
         self._convergence = []
+        self._gbest = 0.0
+        self._gbest_value = 0.0
         random.seed(rand_seed)
         for i in range(self._swarm_size):
             self._swarm[i] = {'Position': [round(random.uniform(self._xmin, self._xmax), 2) for x in range(self._dimensions)], \
@@ -66,15 +68,15 @@ class PSO:
             # spara pbest som ny global bästa (gbest)
             # spara ny pbest som ny temp_pbest
             if abs(self._swarm[i]['best_value']) < abs(temp_pbest_value):
-                self._swarm['gbest'] = self._swarm[i]['pbest']
+                self._gbest = self._swarm[i]['pbest']
                 temp_pbest_value = self._swarm[i]['best_value']
             # Annars, behåll bästa pbest som gbest
             else:
-                self._swarm['gbest'] = self._swarm[i]['pbest']
+                self._gbest = self._swarm[i]['pbest']
         
         # Spara gbest_value från den med gbest position
-        self._swarm['gbest_value'] = self.rastrigin_fitness(self._swarm['gbest'])
-        self._convergence.append(self._swarm['gbest_value'])
+        self._gbest_value = self.rastrigin_fitness(self._gbest)
+        self._convergence.append(self._gbest_value)
 
         for i in range(self._swarm_size):
             self._swarm[i]['Fitness'] = self.rastrigin_fitness(self._swarm[i]['Position'])
@@ -98,7 +100,7 @@ class PSO:
     def get_particle(self):
         print("-----------------------------------")
         for i in range(self._swarm_size):
-            print(f'Particle #{i}: Position: {self._swarm[i]['Position']} | pbest: {self._swarm[i]['pbest']} | gbest: {self._swarm['gbest']}')
+            print(f'Particle #{i}: Position: {self._swarm[i]['Position']} | pbest: {self._swarm[i]['pbest']} | gbest: {self._gbest}')
         # return self._swarm[i]
 
     def sphere_fitness(self, particle):
@@ -125,10 +127,10 @@ class PSO:
                     self._swarm[i]['pbest'] = self._swarm[i]['Position']
                     self._swarm[i]['best_value'] = current_value
                 # Uppdatera globalt bästa
-                if current_value < self._swarm['gbest_value']:
-                    self._swarm['gbest'] = self._swarm[i]['Position']
-                    self._swarm['gbest_value'] = current_value
-            self._convergence.append(self._swarm['gbest_value'])
+                if current_value < self._gbest_value:
+                    self._gbest = self._swarm[i]['Position']
+                    self._gbest_value = current_value
+            self._convergence.append(self._gbest_value)
 
             for i in range(self._swarm_size):
                 r1 = round(random.random(), 3)
